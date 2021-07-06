@@ -3,11 +3,13 @@ const apiRouter = require("./Routers/api.router");
 require("./database/database");
 require("./Models");
 
+const port = 8000
+
 const app = express();
 
 app.use(express.json());
 app.use("/api", apiRouter);
 
-app.listen(8000, () => {
-  console.log("Listening on port 8000...");
+app.listen(port, () => {
+  console.log(`Listening on port ${port}...`);
 });

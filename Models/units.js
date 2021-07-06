@@ -1,6 +1,5 @@
 const sequelize = require("../database/database");
 const { Model, DataTypes } = require("sequelize");
-const Property = require("./properties");
 
 class Unit extends Model {}
 
@@ -36,6 +35,14 @@ Unit.init(
   {
     sequelize,
     modelName: "unit",
+    // validate: {
+    //   async IsAvailable() {
+    //     const units = await Unit.findAll();
+    //     if (units.length >= 7) {
+    //       throw new Error("you are allowed to have 7 units only!");
+    //     }
+    //   },
+    // },
   }
 );
 
