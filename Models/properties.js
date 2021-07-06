@@ -19,10 +19,20 @@ Property.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    
   },
   {
     sequelize,
     modelName: "property",
+    defaultScope: {
+      include: {
+        model: Unit
+      },
+      
+      order: [
+        ["name", "ASC"]
+      ]
+    }
   }
 );
 

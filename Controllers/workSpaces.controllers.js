@@ -1,7 +1,7 @@
-const Unit = require("../Models/units");
+const WorkSpace = require("../Models/workSpaces");
 
 const create = async (req, res) => {
-  Unit.create(req.body)
+  WorkSpace.create(req.body)
     .then((instance) => {
       res.send(instance);
     })
@@ -22,15 +22,12 @@ const create = async (req, res) => {
 };
 
 const list = async (req, res) => {
-  const objects = await Unit.findAll().catch((error) => {
-    res.send(error);
-    return;
-  });
+  const objects = await WorkSpace.findAll({where: req.filter});
   res.send(objects);
 };
 
 const detail = async (req, res) => {
-  const instance = await Unit.findByPk(req.params.id);
+  const instance = await WorkSpace.findByPk(req.params.id);
   if (!instance) {
     res.send("Resource not found");
   }
@@ -38,7 +35,7 @@ const detail = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const instance = await Unit.findByPk(req.params.id);
+  const instance = await WorkSpace.findByPk(req.params.id);
   if (!instance) {
     res.send("Resource not found");
     return;
@@ -56,7 +53,7 @@ const update = async (req, res) => {
 };
 
 const remove = async (req, res) => {
-  const instance = await Unit.findByPk(req.params.id);
+  const instance = await WorkSpace.findByPk(req.params.id);
   if (!instance) {
     res.send("Resource is not found");
     return;

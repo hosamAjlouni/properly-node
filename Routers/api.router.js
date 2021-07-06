@@ -7,5 +7,6 @@ router.use("/properties", routers.propertiesRouter);
 router.use("/units", routers.unitsRouter);
 router.use("/contacts", routers.contactsRouter);
 router.use("/users", routers.usersRouter);
+router.use("/workSpaces", routers.workSpacesRouter);
 
 module.exports = router;

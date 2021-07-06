@@ -8,6 +8,7 @@ const create = async (req, res) => {
     })
     .catch((error) => {
       if ("errors" in error) {
+        // to handle integrity errors
         const fields = error.errors.map((err) => {
           return {
             path: err.path,
@@ -25,10 +26,8 @@ const list = async (req, res) => {
   const objects = await Property.findAll({
     include: {
       model: Unit,
+      required: true
     },
-  }).catch((error) => {
-    res.send(error);
-    return;
   });
   res.send(objects);
 };
@@ -65,7 +64,10 @@ const remove = async (req, res) => {
     res.send("Resource is not found");
     return;
   }
-  const destroyed = await instance.destroy();
+  const destroyed = await instance.destroy().catch((error) => {
+    res.send(error);
+    return;
+  });
   res.send(destroyed);
 };
 

@@ -7,6 +7,7 @@ const create = async (req, res) => {
     })
     .catch((error) => {
       if ("errors" in error) {
+        // to handle integrity errors
         const fields = error.errors.map((err) => {
           return {
             path: err.path,
@@ -60,7 +61,10 @@ const remove = async (req, res) => {
     res.send("Resource is not found");
     return;
   }
-  const destroyed = await instance.destroy();
+  const destroyed = await instance.destroy().catch((error) => {
+    res.send(error);
+    return;
+  });
   res.send(destroyed);
 };
 
