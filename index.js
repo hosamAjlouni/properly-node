@@ -10,6 +10,8 @@ const app = express();
 
 app.use(express.json());
 app.use(filterObjectGenerator);
+
+
 app.use("/api", apiRouter);
 
 app.listen(port, () => {

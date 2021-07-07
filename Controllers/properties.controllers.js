@@ -26,14 +26,28 @@ const list = async (req, res) => {
   const objects = await Property.findAll({
     include: {
       model: Unit,
-      required: true
     },
   });
   res.send(objects);
 };
 
 const detail = async (req, res) => {
-  const instance = await Property.findByPk(req.params.id);
+  const instance = await Property.findByPk(req.params.id, {
+    include: {
+      model: Unit,
+    },
+  });
+  if (!instance) {
+    res.send("Resource not found");
+  }
+  res.send(instance);
+};
+
+const association = async (req, res) => {
+  console.log(req.params.association)
+  const instance = await Property.findByPk(req.params.id, {
+    include: req.params.association
+  });
   if (!instance) {
     res.send("Resource not found");
   }
@@ -75,6 +89,7 @@ module.exports = {
   create,
   list,
   detail,
+  association,
   update,
   remove,
 };

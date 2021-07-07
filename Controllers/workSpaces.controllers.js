@@ -1,4 +1,6 @@
+const { Op } = require("sequelize");
 const WorkSpace = require("../Models/workSpaces");
+const filterFilter = require("../utils/filterFilter.util");
 
 const create = async (req, res) => {
   WorkSpace.create(req.body)
@@ -22,7 +24,11 @@ const create = async (req, res) => {
 };
 
 const list = async (req, res) => {
-  const objects = await WorkSpace.findAll({where: req.filter});
+  const filter = filterFilter(req.filter, WorkSpace.rawAttributes)
+  const objects = await WorkSpace.findAll({where: filter}).catch(error => {
+    res.send(error);
+    return;
+  });
   res.send(objects);
 };
 

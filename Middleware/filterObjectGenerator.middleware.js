@@ -4,12 +4,12 @@ const filterObjectGenerator = (req, res, next) => {
   const filter = {};
 
   Object.keys(query).forEach((key) => {
-    if (!key.includes("_")) {
-      filter[key] = query[key];
-    } else {
+    if (key.includes("_")) {
       const [col, operator] = key.split("_");
-      console.log(query.key)
+      if (query[key].split(",").length > 1)
       filter[col] = { [Op[operator]]: query[key] };
+    } else {
+      filter[key] = query[key];
     }
   });
 

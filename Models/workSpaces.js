@@ -1,8 +1,8 @@
 const sequelize = require("../database/database");
-const { Model, DataTypes, Op } = require("sequelize")
+const { Model, DataTypes, Op } = require("sequelize");
 
-const User = require('./users')
-const Property = require('./properties')
+const User = require("./users");
+const Property = require("./properties");
 
 class WorkSpace extends Model {}
 
@@ -10,11 +10,11 @@ WorkSpace.init(
   {
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     type: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     price: {
       type: DataTypes.INTEGER,
@@ -22,29 +22,26 @@ WorkSpace.init(
       validate: {
         min: {
           args: [[0]],
-          msg: "minimum of zero"
-        }
-      }
-    }
+          msg: "minimum of zero",
+        },
+      },
+    },
   },
   {
     sequelize,
-    modelName: "workSpaces"
+    modelName: "workSpaces",    
   }
-)
+);
 
 WorkSpace.hasMany(User);
-User.belongsTo(WorkSpace, {
-  foreignKeyConstraint: true
-});
+User.belongsTo(WorkSpace);
 
 WorkSpace.hasMany(Property, {
   foreignKey: {
-    allowNull: false
+    allowNull: false,
   },
-  onDelete: "restrict"
-})
-Property.belongsTo(WorkSpace)
+  onDelete: "restrict",
+});
+Property.belongsTo(WorkSpace);
 
-
-module.exports = WorkSpace
+module.exports = WorkSpace;

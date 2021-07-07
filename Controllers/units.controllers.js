@@ -1,4 +1,6 @@
 const Unit = require("../Models/units");
+const Property = require("../Models/properties");
+const filterFilter = require("../utils/filterFilter.util");
 
 const create = async (req, res) => {
   Unit.create(req.body)
@@ -22,7 +24,11 @@ const create = async (req, res) => {
 };
 
 const list = async (req, res) => {
-  const objects = await Unit.findAll().catch((error) => {
+  const filter = filterFilter(req.filter, Unit.rawAttributes);
+  const objects = await Unit.findAll({
+    where: filter,
+    include: { model: Property, right: true, required: false },
+  }).catch((error) => {
     res.send(error);
     return;
   });
