@@ -1,7 +1,7 @@
 const standardControllerSet = require("./standardControllerSet");
-const WorkSpace = require("../Models/workspaces");
+const Contact = require("../Models/leases");
 
-const viewSet = standardControllerSet(WorkSpace);
+const viewSet = standardControllerSet(Contact);
 
 module.exports = {
   ...viewSet

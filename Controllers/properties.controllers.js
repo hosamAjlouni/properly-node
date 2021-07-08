@@ -1,7 +1,7 @@
-const standardApiSet = require("./standardApiSet");
+const standardControllerSet = require("./standardControllerSet");
 const Property = require("../Models/properties");
 
-const viewSet = standardApiSet(Property);
+const viewSet = standardControllerSet(Property);
 
 module.exports = {
   ...viewSet,

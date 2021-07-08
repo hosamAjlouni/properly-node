@@ -1,20 +1,20 @@
-const { Unit } = require("../Models");
 const { Model: BaseModel } = require("sequelize");
 const sequelize = require("../database/database");
-const { getPlural, getSingular } = require("../utils/pluralSingular");
+const filterFilter = require("../utils/filterFilter.util");
+const { plural, singular } = require("pluralize");
 
 function tryAssociate(Model, associationString) {
-  const isModel = getSingular(associationString) in sequelize.models;
+  const isModel = singular(associationString) in sequelize.models;
   let associationModel = null;
   if (isModel) {
-    associationModel = sequelize.model(getSingular(associationString));
+    associationModel = sequelize.model(singular(associationString));
   }
   const isAssociated =
     isModel &&
-    (getSingular(associationString) in Model.associations ||
-      getSingular(associationString) in associationModel.associations ||
-      getPlural(associationString) in Model.associations ||
-      getPlural(associationString) in associationModel.associations);
+    (singular(associationString) in Model.associations ||
+      singular(associationString) in associationModel.associations ||
+      plural(associationString) in Model.associations ||
+      plural(associationString) in associationModel.associations);
 
   return {
     associationModel: associationModel,
@@ -22,7 +22,7 @@ function tryAssociate(Model, associationString) {
   };
 }
 
-const standardApiSet = (Model) => {
+const standardControllerSet = (Model) => {
   if (!(Model.prototype instanceof BaseModel)) {
     throw new Error(
       "Sorry, Provided Model is not a subclass of the base Model"
@@ -51,11 +51,30 @@ const standardApiSet = (Model) => {
   };
 
   const list = async (req, res) => {
-    const objects = await Model.findAll();
+    filter = filterFilter(req.filter, Model.rawAttributes);
+
+    const objects = await Model.findAll({ where: filter });
+    res.send(objects);
+  };
+
+  const listInclude = async (req, res) => {
+    const { associationModel, isAssociated } = tryAssociate(
+      Model,
+      req.params.include
+    );
+
+    const include = {};
+    if (associationModel && isAssociated) {
+      include.model = associationModel;
+      include.where = filterFilter(req.filter, associationModel.rawAttributes);
+    }
+
+    const objects = await Model.findAll({include: include});
     res.send(objects);
   };
 
   const detail = async (req, res) => {
+    console.log('************************')
     const instance = await Model.findByPk(req.params.id);
     if (!instance) {
       res.send("Resource not found");
@@ -63,30 +82,19 @@ const standardApiSet = (Model) => {
     res.send(instance);
   };
 
-  const detailAssociation = async (req, res) => {
+  const detailInclude = async (req, res) => {
+    const include = {};
     const { associationModel, isAssociated } = tryAssociate(
       Model,
-      req.params.association
+      req.params.include
     );
-    
-    const options = {}
+
     if (associationModel && isAssociated) {
-      options.include = associationModel
+      include.model = associationModel;
+      include.where = filterFilter(req.filter, associationModel.rawAttributes);
     }
-    
-    const instance = await Model.findByPk(req.params.id, options);
-    if (!instance) {
-      res.send("Resource not found");
-    }
-    res.send(instance);
-  };
 
-  const listAssociation = async (req, res) => {
-    // console.log(Property.prototype);
-    console.log(Unit.associations);
-    return;
-
-    const instance = await Model.findByPk(req.params.id);
+    const instance = await Model.findByPk(req.params.id, {include: include});
     if (!instance) {
       res.send("Resource not found");
     }
@@ -127,12 +135,12 @@ const standardApiSet = (Model) => {
   return {
     create,
     list,
-    listAssociation,
+    listInclude,
     detail,
-    detailAssociation,
+    detailInclude,
     update,
     remove,
   };
 };
 
-module.exports = standardApiSet;
+module.exports = standardControllerSet;

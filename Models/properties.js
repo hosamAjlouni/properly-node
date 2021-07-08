@@ -1,6 +1,5 @@
 const sequelize = require("../database/database");
 const { Model, DataTypes } = require("sequelize");
-const Unit = require("./units");
 
 class Property extends Model {}
 
@@ -31,8 +30,5 @@ Property.init(
     }
   }
 );
-
-Property.hasMany(Unit);
-Unit.belongsTo(Property);
 
 module.exports = Property;

@@ -26,11 +26,6 @@ Unit.init(
       type: DataTypes.NUMBER.UNSIGNED,
       // allowNull: false,
     },
-    propertyId: {
-      type: DataTypes.INTEGER,
-      unique: "propertyUnit",
-      allowNull: false,
-    },
   },
   {
     sequelize,

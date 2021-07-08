@@ -6,7 +6,7 @@ const sequelize = new Sequelize("db", "admin", "admin", {
 });
 
 sequelize.sync().then(() => {
-  console.log("DataBase is ready!");
+  console.log("Database is ready!");
 });
 
 module.exports = sequelize;
