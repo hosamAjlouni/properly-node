@@ -13,16 +13,6 @@ Workspace.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    price: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        min: {
-          args: [[0]],
-          msg: "minimum of zero",
-        },
-      },
-    },
   },
   {
     sequelize,

@@ -7,7 +7,7 @@ Property.init(
   {
     name: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: "uniqueProperty",
       allowNull: false,
     },
     yearBuilt: {

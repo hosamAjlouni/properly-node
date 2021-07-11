@@ -16,10 +16,7 @@ function tryAssociate(Model, associationString) {
       plural(associationString) in Model.associations ||
       plural(associationString) in associationModel.associations);
 
-  return {
-    associationModel: associationModel,
-    isAssociated: isAssociated,
-  };
+  return { associationModel, isAssociated };
 }
 
 const standardControllerSet = (Model) => {
@@ -52,29 +49,30 @@ const standardControllerSet = (Model) => {
 
   const list = async (req, res) => {
     filter = filterFilter(req.filter, Model.rawAttributes);
-
     const objects = await Model.findAll({ where: filter });
+
     res.send(objects);
   };
 
   const listInclude = async (req, res) => {
+    const include = {};
     const { associationModel, isAssociated } = tryAssociate(
       Model,
       req.params.include
     );
 
-    const include = {};
     if (associationModel && isAssociated) {
       include.model = associationModel;
       include.where = filterFilter(req.filter, associationModel.rawAttributes);
+      include.required = false;
     }
+    console.log(associationModel.rawAttributes)
+    const objects = await Model.findAll({ include: {...include} });
 
-    const objects = await Model.findAll({include: include});
     res.send(objects);
   };
 
   const detail = async (req, res) => {
-    console.log('************************')
     const instance = await Model.findByPk(req.params.id);
     if (!instance) {
       res.send("Resource not found");
@@ -88,13 +86,14 @@ const standardControllerSet = (Model) => {
       Model,
       req.params.include
     );
-
+    
     if (associationModel && isAssociated) {
       include.model = associationModel;
       include.where = filterFilter(req.filter, associationModel.rawAttributes);
+      include.required = false;
     }
 
-    const instance = await Model.findByPk(req.params.id, {include: include});
+    const instance = await Model.findByPk(req.params.id, { include: {...include} });
     if (!instance) {
       res.send("Resource not found");
     }
@@ -111,7 +110,7 @@ const standardControllerSet = (Model) => {
       if (key in instance) {
         instance[key] = req.body[key];
       } else {
-        res.send(`sorry, "${key}" not a valid attribute`);
+        res.send(`sorry, "${key}" is not a valid attribute`);
         return;
       }
     });

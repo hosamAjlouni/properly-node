@@ -17,6 +17,13 @@ Lease.init(
   {
     sequelize,
     modelName: "lease",
+    scopes: {
+      'active': {
+        where: {
+
+        }
+      }
+    }
   }
 );
 
