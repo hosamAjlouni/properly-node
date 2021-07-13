@@ -2,6 +2,7 @@ const { Model: BaseModel } = require("sequelize");
 const sequelize = require("../database/database");
 const filterFilter = require("../utils/filterFilter.util");
 const { plural, singular } = require("pluralize");
+const { ValidationError, BaseError } = require("../Middleware/error-handler");
 
 function tryAssociate(Model, associationString) {
   const isModel = singular(associationString) in sequelize.models;
@@ -27,27 +28,13 @@ const standardControllerSet = (Model) => {
   }
 
   const create = async (req, res) => {
-    Model.create(req.body)
-      .then((instance) => {
-        res.send(instance);
-      })
-      .catch((error) => {
-        if ("errors" in error) {
-          // to handle integrity errors
-          const fields = error.errors.map((err) => {
-            return {
-              path: err.path,
-              message: err.message,
-            };
-          });
-          res.send({ errors: fields });
-        } else {
-          res.send(error);
-        }
-      });
+    const instance = await Model.create(req.body);
+    res.send(instance);
   };
 
   const list = async (req, res) => {
+    throw new BaseError([{name:'hosam', age: 27}, {name:'masoh', age: 72}], 444)
+
     filter = filterFilter(req.filter, Model.rawAttributes);
     const objects = await Model.findAll({ where: filter });
 
@@ -66,17 +53,14 @@ const standardControllerSet = (Model) => {
       include.where = filterFilter(req.filter, associationModel.rawAttributes);
       include.required = false;
     }
-    console.log(associationModel.rawAttributes)
-    const objects = await Model.findAll({ include: {...include} });
+    console.log(associationModel.rawAttributes);
+    const objects = await Model.findAll({ include: { ...include } });
 
     res.send(objects);
   };
 
   const detail = async (req, res) => {
     const instance = await Model.findByPk(req.params.id);
-    if (!instance) {
-      res.send("Resource not found");
-    }
     res.send(instance);
   };
 
@@ -86,14 +70,16 @@ const standardControllerSet = (Model) => {
       Model,
       req.params.include
     );
-    
+
     if (associationModel && isAssociated) {
       include.model = associationModel;
       include.where = filterFilter(req.filter, associationModel.rawAttributes);
       include.required = false;
     }
 
-    const instance = await Model.findByPk(req.params.id, { include: {...include} });
+    const instance = await Model.findByPk(req.params.id, {
+      include: { ...include },
+    });
     if (!instance) {
       res.send("Resource not found");
     }

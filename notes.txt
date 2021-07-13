@@ -1,0 +1,28 @@
+{% comment %} - global-error-handling {% endcomment %}
+- express-promise-router??
+- async - await
+- no try-catch or then().catch()
+- 
+- express validator
+- non-sequelize validation
+- 
+- services
+- 
+- custom controllers
+- 
+- migrations
+- 
+- project structure
+- 
+- es-lint
+- 
+- jam - ciam-auth
+- 
+- response global structure:
+- {
+-   code: 200,
+-   message: 'ok',
+-   data:{} or [],
+-   errors: [],
+-   count:,
+- }

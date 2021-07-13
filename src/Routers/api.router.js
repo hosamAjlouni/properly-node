@@ -1,7 +1,5 @@
-const express = require("express");
+const router = require("express").Router();
 const routers = require("./index.router");
-
-const router = express.Router();
 
 router.use("/users", routers.usersRouter);
 router.use("/workSpaces", routers.workSpacesRouter);
