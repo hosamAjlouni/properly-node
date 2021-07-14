@@ -28,6 +28,12 @@ class ValidationError extends BaseError {
   }
 }
 
+class BadRequestError extends BaseError {
+  constructor(error, statusCode = 400) {
+    super(error, statusCode);
+  }
+}
+
 const errorHandler = (error, req, res, next) => {
   if (error instanceof BaseError) {
     const errorBody = {
@@ -35,7 +41,7 @@ const errorHandler = (error, req, res, next) => {
       error: error.message,
     };
     res.status(error.statusCode);
-    res.send(errBody);
+    res.send(errorBody);
     return;
   }
   res.status(500);
@@ -45,6 +51,8 @@ const errorHandler = (error, req, res, next) => {
 
 module.exports = {
   BaseError,
+  BadRequestError,
   ValidationError,
+  NotFoundError,
   errorHandler,
 };

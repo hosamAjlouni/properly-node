@@ -35,6 +35,8 @@ User.belongsTo(Workspace);
 // Property
 Property.belongsTo(Workspace);
 Property.hasMany(Unit, {
+  // onDelete: "restrict",
+  // onUpdate: "CASCADE",
   foreignKey: {
     unique: "uniqueUnit",
     allowNull: false,

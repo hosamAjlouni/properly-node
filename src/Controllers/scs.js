@@ -1,24 +1,8 @@
+const { NotFoundError, ValidationError, BaseError } = require("../Middleware/error-handler");
 const { Model: BaseModel } = require("sequelize");
-const sequelize = require("../database/database");
+const tryAssociate = require('../utils/try-associate')
 const filterFilter = require("../utils/filterFilter.util");
-const { plural, singular } = require("pluralize");
-const { ValidationError, BaseError } = require("../Middleware/error-handler");
 
-function tryAssociate(Model, associationString) {
-  const isModel = singular(associationString) in sequelize.models;
-  let associationModel = null;
-  if (isModel) {
-    associationModel = sequelize.model(singular(associationString));
-  }
-  const isAssociated =
-    isModel &&
-    (singular(associationString) in Model.associations ||
-      singular(associationString) in associationModel.associations ||
-      plural(associationString) in Model.associations ||
-      plural(associationString) in associationModel.associations);
-
-  return { associationModel, isAssociated };
-}
 
 const standardControllerSet = (Model) => {
   if (!(Model.prototype instanceof BaseModel)) {
@@ -33,11 +17,11 @@ const standardControllerSet = (Model) => {
   };
 
   const list = async (req, res) => {
-    throw new BaseError([{name:'hosam', age: 27}, {name:'masoh', age: 72}], 444)
-
     filter = filterFilter(req.filter, Model.rawAttributes);
     const objects = await Model.findAll({ where: filter });
-
+    if (!objects.length) {
+      throw new NotFoundError('no resources found')
+    }
     res.send(objects);
   };
 
