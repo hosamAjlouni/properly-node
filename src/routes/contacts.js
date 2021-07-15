@@ -1,4 +1,4 @@
-const Contact = require("../Models/contacts");
+const Contact = require("../models/contacts");
 const router = require("express").Router();
 const {
   create,
@@ -6,8 +6,8 @@ const {
   detail,
   update,
   remove,
-} = require("../Controllers/contacts");
-const filterConstructor = require("../Middleware/filterConstructor");
+} = require("../controllers/contacts");
+const filterConstructor = require("../middleware/filterConstructor");
 
 router.post("/", create);
 router.get("/", filterConstructor(Contact), list);

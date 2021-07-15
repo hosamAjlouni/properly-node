@@ -1,14 +1,17 @@
-const Property = require("../Models/properties");
-const { BadRequestError } = require("../Middleware/error-handler");
+const Property = require("../models/properties");
+const { BadRequestError } = require("../middleware/error-handler");
+const { validationResult } = require("express-validator");
+const { getProperties } = require('../services/properties')
 
 const create = async (req, res) => {
-  const instance = await Property.create(req.body);
+  
+  const instance = 
   res.send(instance);
 };
 
 const list = async (req, res) => {
-  const objects = await Property.findAll({ where: req.filter });
-  res.send(objects);
+  const objects = await getProperties(req.workspaceId, req.filter)
+  res.status(200).send(objects);
 };
 
 const detail = async (req, res) => {

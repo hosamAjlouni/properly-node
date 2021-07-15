@@ -1,5 +1,5 @@
-const Contact = require("../Models/contacts");
-const { BadRequestError } = require("../Middleware/error-handler");
+const Contact = require("../models/contacts");
+const { BadRequestError } = require("../middleware/error-handler");
 
 const create = async (req, res) => {
   const instance = await Contact.create(req.body);

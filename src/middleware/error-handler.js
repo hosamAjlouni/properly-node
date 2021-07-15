@@ -34,23 +34,28 @@ class BadRequestError extends BaseError {
   }
 }
 
+class AuthorizationError extends BaseError {
+  constructor(error, statusCode = 401) {
+    super(error, statusCode);
+  }
+}
+
 const errorHandler = (error, req, res, next) => {
   if (error instanceof BaseError) {
     const errorBody = {
       code: error.statusCode,
-      error: error.message,
+      [Array.isArray(error.message) ? 'errors' : 'error']: error.message,
     };
-    res.status(error.statusCode);
-    res.send(errorBody);
+    res.status(error.statusCode).send(errorBody);
     return;
   }
-  res.status(500);
-  res.send(error);
+  res.status(500).send(error);
   return;
 };
 
 module.exports = {
   BaseError,
+  AuthorizationError,
   BadRequestError,
   ValidationError,
   NotFoundError,

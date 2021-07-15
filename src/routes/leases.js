@@ -1,4 +1,4 @@
-const Property = require("../Models/properties");
+const Lease = require("../models/leases");
 const router = require("express").Router();
 const {
   create,
@@ -6,11 +6,11 @@ const {
   detail,
   update,
   remove,
-} = require("../Controllers/properties");
-const filterConstructor = require("../Middleware/filterConstructor");
+} = require("../controllers/leases");
+const filterConstructor = require("../middleware/filterConstructor");
 
 router.post("/", create);
-router.get("/", filterConstructor(Property), list);
+router.get("/", filterConstructor(Lease), list);
 router.get("/:id([0-9]+)/", detail);
 router.put("/:id([0-9]+)/", update);
 router.delete("/:id([0-9]+)/", remove);

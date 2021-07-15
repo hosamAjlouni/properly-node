@@ -18,16 +18,13 @@ Property.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    
   },
   {
     sequelize,
     modelName: "property",
     defaultScope: {
-      order: [
-        ["name", "ASC"]
-      ]
-    }
+      order: [["name", "ASC"]],
+    },
   }
 );
 

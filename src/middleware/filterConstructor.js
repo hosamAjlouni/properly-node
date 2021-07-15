@@ -27,8 +27,6 @@ const filterConstructor = (Model) => {
       (key) => !(key in allowedAttr)
     );
 
-    // console.log(disAllowedAttr)
-
     if (disAllowedAttr.length) {
       throw new BadRequestError(
         `${disAllowedAttr.join(", ")} are not valid filter attributes.`

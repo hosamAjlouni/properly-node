@@ -1,14 +1,14 @@
 {% comment %} - global-error-handling {% endcomment %}
-- express-promise-router??
-- async - await
-- no try-catch or then().catch()
+{% comment %} - express-promise-router?? {% endcomment %}
+{% comment %} - async - await {% endcomment %}
+{% comment %} - no try-catch or then().catch() {% endcomment %}
 - 
 - express validator
 - non-sequelize validation
 - 
 - services
 - 
-- custom controllers
+{% comment %} - custom controllers {% endcomment %}
 - 
 - migrations
 - 
@@ -18,6 +18,12 @@
 - 
 - jam - ciam-auth
 - 
+
+
+
+
+
+
 - response global structure:
 - {
 -   code: 200,

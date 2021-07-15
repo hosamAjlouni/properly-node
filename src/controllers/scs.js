@@ -1,4 +1,4 @@
-const { NotFoundError, ValidationError, BaseError } = require("../Middleware/error-handler");
+const { NotFoundError, ValidationError, BaseError } = require("../middleware/error-handler");
 const { Model: BaseModel } = require("sequelize");
 const tryAssociate = require('../utils/try-associate')
 const filterFilter = require("../utils/filterFilter.util");
@@ -37,7 +37,6 @@ const standardControllerSet = (Model) => {
       include.where = filterFilter(req.filter, associationModel.rawAttributes);
       include.required = false;
     }
-    console.log(associationModel.rawAttributes);
     const objects = await Model.findAll({ include: { ...include } });
 
     res.send(objects);

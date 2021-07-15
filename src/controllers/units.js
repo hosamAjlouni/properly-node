@@ -1,24 +1,24 @@
-const Lease = require("../Models/leases");
-const { BadRequestError } = require("../Middleware/error-handler");
+const Unit = require("../models/units");
+const { BadRequestError } = require("../middleware/error-handler");
 
 const create = async (req, res) => {
-  const instance = await Lease.create(req.body);
+  const instance = await Unit.create(req.body);
   res.send(instance);
 };
 
 const list = async (req, res) => {
-  const objects = await Lease.findAll({ where: req.filter });
+  const objects = await Unit.findAll({ where: req.filter });
   res.send(objects);
 };
 
 const detail = async (req, res) => {
-  const instance = await Lease.findByPk(req.params.id);
+  const instance = await Unit.findByPk(req.params.id);
   if (!instance) throw new BadRequestError("Resource not found");
   res.send(instance);
 };
 
 const update = async (req, res) => {
-  // const instance = await Lease.findByPk(req.params.id);
+  // const instance = await Unit.findByPk(req.params.id);
   
   // if (!instance) throw new BadRequestError("Resource not found");
   
@@ -31,7 +31,7 @@ const update = async (req, res) => {
 };
 
 const remove = async (req, res) => {
-  const instance = await Lease.findByPk(req.params.id);
+  const instance = await Unit.findByPk(req.params.id);
   if (!instance) throw new BadRequestError("Resource is not found");
   await instance.destroy();
   res.send(instance);
