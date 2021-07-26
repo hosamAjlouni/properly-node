@@ -7,20 +7,20 @@ Unit.init(
   {
     num: {
       unique: "uniqueUnit",
-      type: DataTypes.NUMBER.UNSIGNED,
+      type: DataTypes.NUMBER,
       allowNull: false,
     },
     beds: {
-      type: DataTypes.NUMBER.UNSIGNED,
+      type: DataTypes.NUMBER,
     },
     baths: {
-      type: DataTypes.NUMBER.UNSIGNED,
+      type: DataTypes.NUMBER,
     },
     size: {
-      type: DataTypes.NUMBER.UNSIGNED,
+      type: DataTypes.NUMBER,
     },
     marketRent: {
-      type: DataTypes.NUMBER.UNSIGNED,
+      type: DataTypes.NUMBER,
     },
   },
   {

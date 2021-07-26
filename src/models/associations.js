@@ -29,14 +29,18 @@ Workspace.hasMany(Contact, {
   },
 });
 
+Workspace.hasMany(Lease, {
+  foreignKey: {
+    allowNull: false,
+  },
+});
+
 // User
 User.belongsTo(Workspace);
 
 // Property
 Property.belongsTo(Workspace);
 Property.hasMany(Unit, {
-  // onDelete: "restrict",
-  // onUpdate: "CASCADE",
   foreignKey: {
     unique: "uniqueUnit",
     allowNull: false,
@@ -44,8 +48,8 @@ Property.hasMany(Unit, {
 });
 
 // Unit
-Unit.belongsTo(Property);
 Unit.belongsTo(Workspace);
+Unit.belongsTo(Property);
 Unit.hasMany(Lease, {
   foreignKey: {
     allowNull: false,
@@ -53,7 +57,9 @@ Unit.hasMany(Lease, {
 });
 
 // Contact
+Contact.belongsTo(Workspace)
 Contact.belongsTo(Workspace);
 
 // Lease
+Lease.belongsTo(Workspace)
 Lease.belongsTo(Unit)

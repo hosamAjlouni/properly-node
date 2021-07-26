@@ -7,7 +7,6 @@ const {
   listWorkspaceProperties,
   updateProperty,
 } = require("../services/properties");
-const { body } = require("express-validator");
 
 const create = async (req, res) => {
   const errors = [];

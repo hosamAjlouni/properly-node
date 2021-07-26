@@ -1,8 +1,7 @@
-const router = require("express").Router();
 const filterConstructor = require("../middleware/filterConstructor");
 const Property = require("../models/properties");
+const router = require("express").Router();
 const { propertyValidator } = require("../validatorsMW/properties");
-
 const {
   create,
   list,
