@@ -17,12 +17,12 @@ const yearBuilt = body("yearBuilt")
     .isDate()
     .withMessage("should be a valid date");
 
-const createPropertyValidator = [
+const propertyValidator = [
   name,
   yearBuilt,
   throwExpressValidationErrors,
 ];
 
 module.exports = {
-  createPropertyValidator,
+  propertyValidator,
 };
