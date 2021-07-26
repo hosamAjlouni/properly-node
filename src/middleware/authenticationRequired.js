@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const { AuthorizationError, BadRequestError } = require("./error-handler");
 
-const authenticate = async (req, res, next) => {
+const authenticationRequired = async (req, res, next) => {
   const token = req.header("x-auth-token");
   if (!token) throw new AuthorizationError('Unauthorized.')
 
@@ -21,4 +21,4 @@ const authenticate = async (req, res, next) => {
   next();
 };
 
-module.exports = authenticate;
+module.exports = authenticationRequired;

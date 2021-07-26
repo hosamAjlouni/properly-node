@@ -13,13 +13,6 @@ const filterConstructor = require("../middleware/filterConstructor");
 
 router.post("/", create);
 
-router.post(
-  "/auth",
-  body("email").exists().isEmail().withMessage("Should be an Email."),
-  body("password").exists().isString(),
-  authenticate
-);
-
 router.get("/", filterConstructor(User), list);
 router.get("/:id([0-9]+)/", detail);
 router.put("/:id([0-9]+)/", update);
