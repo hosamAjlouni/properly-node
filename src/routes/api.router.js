@@ -7,11 +7,8 @@ const properties = require("./properties");
 const units = require("./units");
 const leases = require("./leases");
 const contacts = require("./contacts");
-const login = require("./login");
 
-router.use("/login", login)
-
-router.use("/users", authenticationRequired, users);
+router.use("/users", users);
 router.use("/workspaces", authenticationRequired, workspaces);
 router.use("/properties", authenticationRequired, properties);
 router.use("/units", authenticationRequired, units);

@@ -6,13 +6,12 @@ class BaseError extends Error {
    * @param {number} statusCode Status code
    * @param {number} code Error code
    */
-  constructor(error, statusCode, code) {
+  constructor(error, statusCode) {
     super(error);
-    Error.captureStackTrace(this, this.constructor);
+    // Error.captureStackTrace(this, this.constructor);
     this.name = this.constructor.name;
     this.message = error;
     this.statusCode = statusCode;
-    this.code = code;
   }
 }
 

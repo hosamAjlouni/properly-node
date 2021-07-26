@@ -1,46 +1,33 @@
-const User = require("../models/users");
+const _ = require("lodash");
 const { BadRequestError } = require("../middleware/error-handler");
+const { validationResult } = require("express-validator");
+const config = require("config");
+const jwt = require("jsonwebtoken");
+const User = require("../models/users");
 
-const create = async (req, res) => {
+const signup = async (req, res) => {
   const instance = await User.create(req.body);
   res.send(instance);
 };
 
-const list = async (req, res) => {
-  const objects = await User.findAll({ where: req.filter });
-  res.send(objects);
-};
+const login = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) throw new BadRequestError(errors.array());
 
-const detail = async (req, res) => {
-  const instance = await User.findByPk(req.params.id);
-  if (!instance) throw new BadRequestError("Resource not found");
-  res.send(instance);
-};
+  const instance = await User.findOne({ where: { email: req.body.email } });
+  if (!instance) throw new BadRequestError("Invalid Email or Password");
 
-const update = async (req, res) => {
-  // const instance = await User.findByPk(req.params.id);
+  const isValid = req.body.password === instance.password;
+  if (!isValid) throw new BadRequestError("Invalid Email or password");
 
-  // if (!instance) throw new BadRequestError("Resource not found");
+  const token = jwt.sign({ userId: instance.id }, config.get("jwtPrivateKey"));
 
-  // const nonAttr = Object.keys(req.body).filter(key => !(key in instance))
-  // if (nonAttr) throw new BadRequestError(`sorry, ${nonAttr.join(', ')} are not valid attributes.`);
-
-  // await instance.save();
-  // res.send(instance);
-  res.send("route under construction");
-};
-
-const remove = async (req, res) => {
-  const instance = await User.findByPk(req.params.id);
-  if (!instance) throw new BadRequestError("Resource is not found");
-  await instance.destroy();
-  res.send(instance);
+  res
+    .header("x-auth-token", token)
+    .send(_.pick(instance, ["id", "username", "email"]));
 };
 
 module.exports = {
-  create,
-  list,
-  detail,
-  update,
-  remove,
+  signup,
+  login,
 };

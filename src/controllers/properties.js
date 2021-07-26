@@ -1,6 +1,5 @@
 const Property = require("../models/properties");
 const { BadRequestError } = require("../middleware/error-handler");
-const { validationResult } = require("express-validator");
 const { getProperties } = require('../services/properties')
 
 const create = async (req, res) => {

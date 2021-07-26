@@ -25,10 +25,10 @@
 
 
 - response global structure:
-- {
--   code: 200,
--   message: 'ok',
--   data:{} or [],
--   errors: [],
--   count:,
-- }
+{
+  code: 200,
+  message: 'ok',
+  data:{} or [],
+  errors: [],
+  count: 50,
+}
