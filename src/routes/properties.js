@@ -1,4 +1,8 @@
 const router = require("express").Router();
+const filterConstructor = require("../middleware/filterConstructor");
+const Property = require("../models/properties");
+const { createPropertyValidator } = require("../validatorsMW/properties");
+
 const {
   create,
   list,
@@ -6,11 +10,8 @@ const {
   update,
   remove,
 } = require("../controllers/properties");
-const filterConstructor = require("../middleware/filterConstructor");
-const Property = require("../models/properties");
-const propertyValidators = require("../validatorsMW/properties");
 
-router.post("/", ...propertyValidators, create);
+router.post("/", ...createPropertyValidator, create);
 router.get("/", filterConstructor(Property), list);
 router.get("/:id([0-9]+)/", detail);
 router.put("/:id([0-9]+)/", update);

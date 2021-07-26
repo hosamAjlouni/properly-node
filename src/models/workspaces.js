@@ -16,7 +16,7 @@ Workspace.init(
   },
   {
     sequelize,
-    modelName: "workspace",    
+    modelName: "workspace",
   }
 );
 

@@ -1,41 +1,67 @@
 const Property = require("../models/properties");
 const { BadRequestError } = require("../middleware/error-handler");
-const { getProperties } = require('../services/properties')
+const {
+  createProperty,
+  deleteProperty,
+  getWorkspaceProperty,
+  listWorkspaceProperties,
+  updateProperty,
+} = require("../services/properties");
+const { body } = require("express-validator");
 
 const create = async (req, res) => {
-  
-  const instance = 
+  const errors = [];
+
+  // Entry validation
+  let objects = await listWorkspaceProperties(req.workspaceId, {
+    name: req.body.name,
+  });
+  if (objects.length)
+    errors.push({ param: "name", msg: "Property name should be unique." });
+  if (errors.length) throw new BadRequestError(errors);
+
+  const instance = await createProperty(req.workspaceId, body);
   res.send(instance);
 };
 
 const list = async (req, res) => {
-  const objects = await getProperties(req.workspaceId, req.filter)
+  const objects = await listWorkspaceProperties(req.workspaceId, req.filter);
   res.status(200).send(objects);
 };
 
 const detail = async (req, res) => {
-  const instance = await Property.findByPk(req.params.id);
-  if (!instance) throw new BadRequestError("Resource not found");
-  res.send(instance);
+  const instance = await getWorkspaceProperty(req.workspaceId, req.params.id);
+  res.status(200).send(instance);
 };
 
 const update = async (req, res) => {
-  // const instance = await Property.findByPk(req.params.id);
-  
-  // if (!instance) throw new BadRequestError("Resource not found");
-  
-  // const nonAttr = Object.keys(req.body).filter(key => !(key in instance))
-  // if (nonAttr) throw new BadRequestError(`sorry, ${nonAttr.join(', ')} are not valid attributes.`);
+  const errors = [];
+  // Entry validation
+  const oldInstance = await getWorkspaceProperty(
+    req.workspaceId,
+    req.params.id
+  );
+  if (oldInstance.name !== req.body.name) {
+    let objects = await listWorkspaceProperties(req.workspaceId, {
+      name: req.body.name,
+    });
+    if (objects.length)
+      errors.push({ param: "name", msg: "Property name should be unique." });
+  }
 
-  // await instance.save();
-  // res.send(instance);
-  res.send('route under construction');
+  if (errors.length) throw new BadRequestError(errors);
+
+  const instance = await updateProperty(
+    req.workspaceId,
+    req.params.id,
+    req.body
+  );
+
+  res.send(instance);
 };
 
 const remove = async (req, res) => {
-  const instance = await Property.findByPk(req.params.id);
-  if (!instance) throw new BadRequestError("Resource is not found");
-  await instance.destroy();
+  const instance = await deleteProperty(req.workspaceId, req.params.id);
   res.send(instance);
 };
 

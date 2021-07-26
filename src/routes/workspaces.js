@@ -6,7 +6,7 @@ const {
   detail,
   update,
   remove,
-} = require("../controllers/properties");
+} = require("../controllers/workspaces");
 const filterConstructor = require("../middleware/filterConstructor");
 
 router.post("/", create);
