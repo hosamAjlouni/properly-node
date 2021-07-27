@@ -1,7 +1,9 @@
 const Contact = require("../models/contacts");
 const { BadRequestError } = require("../middleware/error-handler");
+const contactsValidators = require('../formValidators/contacts')
 
 const create = async (req, res) => {
+  await contactsValidators.createValidator(req.workspaceId, req.body)
   const instance = await Contact.create(req.body);
   res.send(instance);
 };

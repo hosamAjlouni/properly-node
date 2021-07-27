@@ -3,33 +3,34 @@ const { BadRequestError } = require("./error-handler");
 
 const filterConstructor = (Model) => {
   const allowedAttr = Model.rawAttributes;
+  
   return (req, res, next) => {
-    const query = req.query;
+    const queryString = req.query;
     const filter = {};
 
-    if (!Object.keys(query).length) return next();
+    if (!Object.keys(queryString).length) return next();
 
     // construct a general filter
-    Object.keys(query).forEach((key) => {
+    Object.keys(queryString).forEach((key) => {
       if (key.includes("_")) {
         const [col, operator] = key.split("_");
         if (!(operator in Op)) {
           throw new BadRequestError(`${operator} is not a valid operator.`);
         }
-        filter[col] = { [Op[operator]]: query[key] };
+        filter[col] = { [Op[operator]]: queryString[key] };
       } else {
-        filter[key] = query[key];
+        filter[key] = queryString[key];
       }
     });
 
     // ensure that filter attributes matches model's attributes
-    const disAllowedAttr = Object.keys(filter).filter(
+    const disallowedAttr = Object.keys(filter).filter(
       (key) => !(key in allowedAttr)
     );
 
-    if (disAllowedAttr.length) {
+    if (disallowedAttr.length) {
       throw new BadRequestError(
-        `${disAllowedAttr.join(", ")} are not valid filter attributes.`
+        `${disallowedAttr.join(", ")} are not valid filter attributes.`
       );
     }
 

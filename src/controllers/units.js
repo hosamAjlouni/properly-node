@@ -1,5 +1,4 @@
-const Unit = require("../models/units");
-const { BadRequestError } = require("../middleware/error-handler");
+const unitValidators = require("../formValidators/units");
 const {
   createUnit,
   deleteUnit,
@@ -9,19 +8,9 @@ const {
 } = require("../services/units");
 
 const create = async (req, res) => {
-  // const errors = [];
-
-  // Entry validation
-  // let objects = await listWorkspaceUnits(req.workspaceId, {
-  //   name: req.body.name,
-  // });
-  // if (objects.length)
-  //   errors.push({ param: "name", msg: "Unit name should be unique." });
-  // if (errors.length) throw new BadRequestError(errors);
-  // res.send(req.body)
-  
+  await unitValidators.createValidator(req.workspaceId, req.body);
   const instance = await createUnit(req.workspaceId, req.body);
-  res.send(instance);
+  res.status(200).send(instance);
 };
 
 const list = async (req, res) => {
@@ -35,32 +24,18 @@ const detail = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const errors = [];
-  // Entry validation
-  // const oldInstance = await getWorkspaceUnit(
-  //   req.workspaceId,
-  //   req.params.id
-  // );
-  // if (oldInstance.name !== req.body.name) {
-  //   let objects = await listWorkspaceUnits(req.workspaceId, {
-  //     name: req.body.name,
-  //   });
-  //   if (objects.length)
-  //     errors.push({ param: "name", msg: "Unit name should be unique." });
-  // }
-
-  // if (errors.length) throw new BadRequestError(errors);
-
-  const instance = await updateUnit(
+  await unitValidators.updateValidator(
     req.workspaceId,
     req.params.id,
     req.body
   );
 
+  const instance = await updateUnit(req.workspaceId, req.params.id, req.body);
   res.send(instance);
 };
 
 const remove = async (req, res) => {
+  await unitValidators.deleteValidator(req.workspaceId, req.params.id);
   const instance = await deleteUnit(req.workspaceId, req.params.id);
   res.send(instance);
 };

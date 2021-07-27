@@ -1,5 +1,4 @@
-const Property = require("../models/properties");
-const { BadRequestError } = require("../middleware/error-handler");
+const propertyValidators = require("../formValidators/properties");
 const {
   createProperty,
   deleteProperty,
@@ -9,18 +8,9 @@ const {
 } = require("../services/properties");
 
 const create = async (req, res) => {
-  const errors = [];
-
-  // Entry validation
-  let objects = await listWorkspaceProperties(req.workspaceId, {
-    name: req.body.name,
-  });
-  if (objects.length)
-    errors.push({ param: "name", msg: "Property name should be unique." });
-  if (errors.length) throw new BadRequestError(errors);
-
-  const instance = await createProperty(req.workspaceId, body);
-  res.send(instance);
+  await propertyValidators.createValidator(req.workspaceId, req.body);
+  const instance = await createProperty(req.workspaceId, req.body);
+  res.status(200).send(instance);
 };
 
 const list = async (req, res) => {
@@ -34,21 +24,11 @@ const detail = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const errors = [];
-  // Entry validation
-  const oldInstance = await getWorkspaceProperty(
+  await propertyValidators.updateValidator(
     req.workspaceId,
-    req.params.id
+    req.params.id,
+    req.body
   );
-  if (oldInstance.name !== req.body.name) {
-    let objects = await listWorkspaceProperties(req.workspaceId, {
-      name: req.body.name,
-    });
-    if (objects.length)
-      errors.push({ param: "name", msg: "Property name should be unique." });
-  }
-
-  if (errors.length) throw new BadRequestError(errors);
 
   const instance = await updateProperty(
     req.workspaceId,
@@ -56,12 +36,13 @@ const update = async (req, res) => {
     req.body
   );
 
-  res.send(instance);
+  res.status(200).send(instance);
 };
 
 const remove = async (req, res) => {
+  await propertyValidators.deleteValidator(req.workspaceId, req.params.id);
   const instance = await deleteProperty(req.workspaceId, req.params.id);
-  res.send(instance);
+  res.status(200).send(instance);
 };
 
 module.exports = {

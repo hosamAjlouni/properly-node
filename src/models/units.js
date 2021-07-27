@@ -12,15 +12,19 @@ Unit.init(
     },
     beds: {
       type: DataTypes.NUMBER,
+      allowNull: false,
     },
     baths: {
       type: DataTypes.NUMBER,
+      allowNull: false,
     },
     size: {
       type: DataTypes.NUMBER,
+      allowNull: false,
     },
     marketRent: {
       type: DataTypes.NUMBER,
+      allowNull: false,
     },
   },
   {
