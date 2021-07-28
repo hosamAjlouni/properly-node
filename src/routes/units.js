@@ -1,7 +1,7 @@
 const filterConstructor = require("../middleware/filterConstructor");
 const router = require("express").Router();
 const Unit = require("../models/units");
-const { unitValidator } = require('../fieldsValidationMW/units')
+const unitValidator = require('../fieldsValidationMW/units')
 const {
   create,
   list,

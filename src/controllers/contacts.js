@@ -1,41 +1,42 @@
-const Contact = require("../models/contacts");
-const { BadRequestError } = require("../middleware/error-handler");
-const contactsValidators = require('../formValidators/contacts')
+const contactValidators = require("../formValidators/contacts");
+const {
+  createContact,
+  deleteContact,
+  getWorkspaceContact,
+  listWorkspaceContacts,
+  updateContact,
+} = require("../services/contacts");
 
 const create = async (req, res) => {
-  await contactsValidators.createValidator(req.workspaceId, req.body)
-  const instance = await Contact.create(req.body);
-  res.send(instance);
+  await contactValidators.createValidator(req.workspaceId, req.body);
+  const instance = await createContact(req.workspaceId, req.body);
+  res.status(200).send(instance);
 };
 
 const list = async (req, res) => {
-  const objects = await Contact.findAll({ where: req.filter });
-  res.send(objects);
+  const objects = await listWorkspaceContacts(req.workspaceId, req.filter);
+  res.status(200).send(objects);
 };
 
 const detail = async (req, res) => {
-  const instance = await Contact.findByPk(req.params.id);
-  if (!instance) throw new BadRequestError("Resource not found");
-  res.send(instance);
+  const instance = await getWorkspaceContact(req.workspaceId, req.params.id);
+  res.status(200).send(instance);
 };
 
 const update = async (req, res) => {
-  // const instance = await Contact.findByPk(req.params.id);
-  
-  // if (!instance) throw new BadRequestError("Resource not found");
-  
-  // const nonAttr = Object.keys(req.body).filter(key => !(key in instance))
-  // if (nonAttr) throw new BadRequestError(`sorry, ${nonAttr.join(', ')} are not valid attributes.`);
+  await contactValidators.updateValidator(
+    req.workspaceId,
+    req.params.id,
+    req.body
+  );
 
-  // await instance.save();
-  // res.send(instance);
-  res.send('route under construction');
+  const instance = await updateContact(req.workspaceId, req.params.id, req.body);
+  res.send(instance);
 };
 
 const remove = async (req, res) => {
-  const instance = await Contact.findByPk(req.params.id);
-  if (!instance) throw new BadRequestError("Resource is not found");
-  await instance.destroy();
+  await contactValidators.deleteValidator(req.workspaceId, req.params.id);
+  const instance = await deleteContact(req.workspaceId, req.params.id);
   res.send(instance);
 };
 

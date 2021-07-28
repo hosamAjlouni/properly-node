@@ -41,4 +41,34 @@ Contact.init(
   }
 );
 
+Contact.isFullNameUnique = async function (
+  workspaceId,
+  firstName,
+  middleName,
+  lastName
+) {
+  const withSameName = await Contact.findAll({
+    where: {
+      workspaceId,
+      firstName,
+      middleName,
+      lastName,
+    },
+  });
+  return !withSameName.length;
+};
+
+Contact.isPhoneUnique = async function (
+  workspaceId,
+  phone
+) {
+  const withSameName = await Contact.findAll({
+    where: {
+      workspaceId,
+      phone
+    },
+  });
+  return !withSameName.length;
+};
+
 module.exports = Contact;

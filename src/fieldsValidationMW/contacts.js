@@ -37,7 +37,7 @@ const phone = body("phone")
   .notEmpty()
   .withMessage("cannot be empty")
   .isNumeric()
-  .isLength({min: 13, max: 14})
+  .isLength({ min: 13, max: 14 })
   .withMessage("should be 13 - 14 digits")
   .isMobilePhone()
   .withMessage("should be a valid phone number");
@@ -50,6 +50,4 @@ const contactValidator = [
   throwExpressValidationErrors,
 ];
 
-module.exports = {
-  contactValidator,
-};
+module.exports = contactValidator;

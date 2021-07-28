@@ -33,4 +33,28 @@ Unit.init(
   }
 );
 
+Unit.prototype.isAvailableBetween = async function (
+  start = new Date(),
+  end = new Date()
+) {
+  const activeLeases = await this.getLeases({
+    scope: [
+      {
+        method: ["activeBetween", start, end],
+      },
+    ],
+  });
+  return activeLeases;
+};
+
+Unit.isNumUnique = async function (propertyId, num) {
+  const units = await Unit.findAll({
+    where: {
+      propertyId,
+      num,
+    },
+  });
+  return !units.length;
+};
+
 module.exports = Unit;

@@ -1,18 +1,14 @@
-const { BadRequestError } = require("../middleware/error-handler");
+const Property = require("../models/properties")
+const { BadRequestError, FieldError } = require("../middleware/error-handler");
 const {
-  listWorkspaceProperties,
   getWorkspaceProperty,
 } = require("../services/properties");
 
 const createValidator = async (workspaceId, body) => {
   const errors = [];
-
-  let objects = await listWorkspaceProperties(workspaceId, {
-    name: body.name,
-  });
-
-  if (objects.length)
-    errors.push({ param: "name", msg: "Property name should be unique." });
+  const isNameUnique = await Property.isNameUnique(workspaceId, body.name)
+  if (!isNameUnique)
+    errors.push(new FieldError("name", "Property name should be unique."));
 
   if (errors.length) throw new BadRequestError(errors);
 };
@@ -20,15 +16,14 @@ const createValidator = async (workspaceId, body) => {
 const updateValidator = async (workspaceId, propertyId, body) => {
   const errors = [];
   const oldInstance = await getWorkspaceProperty(workspaceId, propertyId);
-  
   if (!oldInstance) throw new BadRequestError("Resource not found.");
+  
   if (oldInstance.name !== body.name) {
-    let objects = await listWorkspaceProperties(workspaceId, {
-      name: body.name,
-    });
-    if (objects.length)
-      errors.push({ param: "name", msg: "Property name should be unique." });
+    let isNameUnique = await Property.isNameUnique(workspaceId, body.name)
+    if (!isNameUnique)
+      errors.push(new FieldError("name", "Property name should be unique."));
   }
+  
 
   if (errors.length) throw new BadRequestError(errors);
 };

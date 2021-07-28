@@ -1,39 +1,37 @@
 const { Op } = require("sequelize");
-const { BadRequestError, FieldError } = require("../middleware/error-handler");
-const Contact = require("../models/contacts");
+const { BadRequestError } = require("../middleware/error-handler");
 const {
-  listWorkspaceContacts,
-  getWorkspaceContact,
-} = require("../services/contacts");
+  listWorkspaceLeases,
+  getWorkspaceLease,
+} = require("../services/leases");
 
 const createValidator = async (workspaceId, body) => {
   const errors = [];
 
-  const isFullNameUnique = await Contact.isFullNameUnique(
-    workspaceId,
-    body.firstName,
-    body.middleName,
-    body.lastName
-  );
-  if (!isFullNameUnique)
-    errors.push(new FieldError("name", "Contact full name should be unique."));
+  // check full name uniqueness
+  let objects = await listWorkspaceLeases(workspaceId, {
+    [Op.and]: {
+      firstName: body.firstName,
+      middleName: body.middleName,
+      lastName: body.lastName,
+    },
+  });
+  if (objects.length)
+    errors.push({ param: "name", msg: "Lease full name should be unique." });
 
   // check phone uniqueness
-  objects = await listWorkspaceContacts(workspaceId, {
+  objects = await listWorkspaceLeases(workspaceId, {
     phone: body.phone,
   });
   if (objects.length)
-    errors.push({
-      param: "name",
-      msg: "Contact phone number should be unique.",
-    });
+    errors.push({ param: "name", msg: "Lease phone number should be unique." });
 
   if (errors.length) throw new BadRequestError(errors);
 };
 
-const updateValidator = async (workspaceId, contactId, body) => {
+const updateValidator = async (workspaceId, leaseId, body) => {
   const errors = [];
-  const oldInstance = await getWorkspaceContact(workspaceId, contactId);
+  const oldInstance = await getWorkspaceLease(workspaceId, leaseId);
 
   if (!oldInstance) throw new BadRequestError("Resource not found.");
   if (
@@ -42,7 +40,7 @@ const updateValidator = async (workspaceId, contactId, body) => {
     oldInstance.lastName !== body.lastName
   ) {
     // check full name uniqueness
-    let objects = await listWorkspaceContacts(workspaceId, {
+    let objects = await listWorkspaceLeases(workspaceId, {
       [Op.and]: {
         firstName: body.firstName,
         middleName: body.middleName,
@@ -52,26 +50,26 @@ const updateValidator = async (workspaceId, contactId, body) => {
     if (objects.length)
       errors.push({
         param: "name",
-        msg: "Contact full name should be unique.",
+        msg: "Lease full name should be unique.",
       });
   }
 
   if (oldInstance.phone !== body.phone) {
     // check phone uniqueness
-    let objects = await listWorkspaceContacts(workspaceId, {
+    let objects = await listWorkspaceLeases(workspaceId, {
       phone: body.phone,
     });
     if (objects.length)
       errors.push({
         param: "name",
-        msg: "Contact phone number should be unique.",
+        msg: "Lease phone number should be unique.",
       });
   }
 
   if (errors.length) throw new BadRequestError(errors);
 };
 
-const deleteValidator = async (workspaceId, contactId) => {};
+const deleteValidator = async (workspaceId, leaseId) => {};
 
 module.exports = {
   createValidator,

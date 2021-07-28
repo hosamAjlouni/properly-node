@@ -8,8 +8,8 @@ const num = body("num")
   .withMessage("cannot be empty")
   .isNumeric()
   .withMessage("should be a number")
-  .isInt({min: 0})
-  .withMessage('should not be negative');
+  .isInt({ min: 0 })
+  .withMessage("should not be negative");
 
 const beds = body("beds")
   .exists()
@@ -18,8 +18,8 @@ const beds = body("beds")
   .withMessage("cannot be empty")
   .isNumeric()
   .withMessage("should be a number")
-  .isInt({min: 0})
-  .withMessage('should not be negative');
+  .isInt({ min: 0 })
+  .withMessage("should not be negative");
 
 const baths = body("baths")
   .exists()
@@ -28,8 +28,8 @@ const baths = body("baths")
   .withMessage("cannot be empty")
   .isNumeric()
   .withMessage("should be a number")
-  .isInt({min: 0})
-  .withMessage('should not be negative');
+  .isInt({ min: 0 })
+  .withMessage("should not be negative");
 
 const size = body("size")
   .exists()
@@ -38,8 +38,8 @@ const size = body("size")
   .withMessage("cannot be empty")
   .isNumeric()
   .withMessage("should be a number")
-  .isInt({min: 0})
-  .withMessage('should not be negative');
+  .isInt({ min: 0 })
+  .withMessage("should not be negative");
 
 const marketRent = body("marketRent")
   .exists()
@@ -48,8 +48,8 @@ const marketRent = body("marketRent")
   .withMessage("cannot be empty")
   .isNumeric()
   .withMessage("should be a number")
-  .isFloat({min: 0})
-  .withMessage('should not be negative');
+  .isFloat({ min: 0 })
+  .withMessage("should not be negative");
 
 const propertyId = body("propertyId")
   .exists()
@@ -58,8 +58,8 @@ const propertyId = body("propertyId")
   .withMessage("cannot be empty")
   .isNumeric()
   .withMessage("should be a number")
-  .isInt({min: 1})
-  .withMessage('should not be negative');
+  .isInt({ min: 1 })
+  .withMessage("should not be negative");
 
 const unitValidator = [
   num,
@@ -71,6 +71,4 @@ const unitValidator = [
   throwExpressValidationErrors,
 ];
 
-module.exports = {
-  unitValidator,
-};
+module.exports = unitValidator;

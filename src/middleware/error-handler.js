@@ -39,6 +39,12 @@ class AuthorizationError extends BaseError {
   }
 }
 
+class FieldError {
+  constructor(param, msg) {
+    return {param: param, msg: msg}
+  }
+}
+
 const errorHandler = (error, req, res, next) => {
   if (error instanceof BaseError) {
     const errorBody = {
@@ -58,5 +64,6 @@ module.exports = {
   BadRequestError,
   ValidationError,
   NotFoundError,
+  FieldError,
   errorHandler,
 };
