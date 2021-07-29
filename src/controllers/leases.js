@@ -3,27 +3,26 @@ const { BadRequestError } = require("../middleware/error-handler");
 const leaseValidators = require("../formValidators/leases");
 const {
   createLease,
-  // deleteLease,
-  // getWorkspaceLease,
-  // listWorkspaceLeases,
+  deleteLease,
+  getWorkspaceLease,
+  listWorkspaceLeases,
   updateLease,
 } = require("../services/leases");
 
 const create = async (req, res) => {
   await leaseValidators.createValidator(req.workspaceId, req.body);
   const instance = await createLease(req.workspaceId, req.body);
-  res.send(instance);
+  res.status(200).send(instance);
 };
 
 const list = async (req, res) => {
-  const objects = await Lease.findAll({ where: req.filter });
-  res.send(objects);
+  const objects = await listWorkspaceLeases(req.workspaceId, req.filter);
+  res.status(200).send(objects);
 };
 
 const detail = async (req, res) => {
-  const instance = await Lease.findByPk(req.params.id);
-  if (!instance) throw new BadRequestError("Resource not found");
-  res.send(instance);
+  const instance = getWorkspaceLease(req.workspaceId, req.params.id)
+  res.status(200).send(instance);
 };
 
 const update = async (req, res) => {
@@ -34,14 +33,13 @@ const update = async (req, res) => {
   );
   const instance = await updateLease(req.workspaceId, req.params.id, req.body);
 
-  res.send(instance);
+  res.status(200).send(instance);
 };
 
 const remove = async (req, res) => {
-  const instance = await Lease.findByPk(req.params.id);
-  if (!instance) throw new BadRequestError("Resource is not found");
-  await instance.destroy();
-  res.send(instance);
+  await leaseValidators.deleteValidator(req.workspaceId, req.params.id)
+  const instance = await deleteLease(req.params.id);
+  res.status(200).send(instance);
 };
 
 module.exports = {
