@@ -35,7 +35,8 @@ Unit.init(
 
 Unit.prototype.isAvailableBetween = async function (
   start,
-  end
+  end,
+  exceptLeaseId = null
 ) {
   const activeLeases = await this.getLeases({
     scope: [
@@ -43,6 +44,11 @@ Unit.prototype.isAvailableBetween = async function (
         method: ["activeBetween", start, end],
       },
     ],
+    where: {
+      id: {
+        [Op.ne]: exceptLeaseId,
+      },
+    },
   });
   return !activeLeases.length;
 };

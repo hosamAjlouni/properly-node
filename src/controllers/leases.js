@@ -6,7 +6,7 @@ const {
   // deleteLease,
   // getWorkspaceLease,
   // listWorkspaceLeases,
-  // updateLease,
+  updateLease,
 } = require("../services/leases");
 
 const create = async (req, res) => {
@@ -27,16 +27,14 @@ const detail = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  // const instance = await Lease.findByPk(req.params.id);
+  await leaseValidators.updateValidator(
+    req.workspaceId,
+    req.params.id,
+    req.body
+  );
+  const instance = await updateLease(req.workspaceId, req.params.id, req.body);
 
-  // if (!instance) throw new BadRequestError("Resource not found");
-
-  // const nonAttr = Object.keys(req.body).filter(key => !(key in instance))
-  // if (nonAttr) throw new BadRequestError(`sorry, ${nonAttr.join(', ')} are not valid attributes.`);
-
-  // await instance.save();
-  // res.send(instance);
-  res.send("route under construction");
+  res.send(instance);
 };
 
 const remove = async (req, res) => {

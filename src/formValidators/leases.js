@@ -8,13 +8,20 @@ const {
 
 const createValidator = async (workspaceId, body) => {
   const errors = [];
+
+  // check (start before end) dates
+  if (new Date(body.start) > new Date(body.end))
+    throw new BadRequestError(
+      new FieldError("start", "Start date should not exceed end date.")
+    );
+
   // check unit availability
   const unit = await Unit.findByPk(body.unitId);
   const isUnitAvailable = await unit.isAvailableBetween(body.start, body.end);
-  
+
   if (!isUnitAvailable)
     errors.push(
-      new FieldError("start", "A conflicting lease on the same unit exists.")
+      new FieldError("start", "Unit is not available for this period.")
     );
 
   if (errors.length) throw new BadRequestError(errors);
@@ -23,38 +30,27 @@ const createValidator = async (workspaceId, body) => {
 const updateValidator = async (workspaceId, leaseId, body) => {
   const errors = [];
   const oldInstance = await getWorkspaceLease(workspaceId, leaseId);
-
   if (!oldInstance) throw new BadRequestError("Resource not found.");
-  if (
-    oldInstance.firstName !== body.firstName ||
-    oldInstance.middleName !== body.middleName ||
-    oldInstance.lastName !== body.lastName
-  ) {
-    // check full name uniqueness
-    let objects = await listWorkspaceLeases(workspaceId, {
-      [Op.and]: {
-        firstName: body.firstName,
-        middleName: body.middleName,
-        lastName: body.lastName,
-      },
-    });
-    if (objects.length)
-      errors.push({
-        param: "name",
-        msg: "Lease full name should be unique.",
-      });
-  }
 
-  if (oldInstance.phone !== body.phone) {
-    // check phone uniqueness
-    let objects = await listWorkspaceLeases(workspaceId, {
-      phone: body.phone,
-    });
-    if (objects.length)
-      errors.push({
-        param: "name",
-        msg: "Lease phone number should be unique.",
-      });
+  // check (start before end) dates
+  if (new Date(body.start) > new Date(body.end))
+    throw new BadRequestError(
+      new FieldError("start", "Start date should not exceed end date.")
+    );
+
+  if (oldInstance.start !== body.start || oldInstance.end !== body.end) {
+    // check unit availability
+    const unit = await Unit.findByPk(body.unitId);
+    const isUnitAvailable = await unit.isAvailableBetween(
+      body.start,
+      body.end,
+      leaseId
+    );
+
+    if (!isUnitAvailable)
+      errors.push(
+        new FieldError("start", "Unit is not available for this period.")
+      );
   }
 
   if (errors.length) throw new BadRequestError(errors);
