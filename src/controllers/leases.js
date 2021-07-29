@@ -1,5 +1,3 @@
-const Lease = require("../models/leases");
-const { BadRequestError } = require("../middleware/error-handler");
 const leaseValidators = require("../formValidators/leases");
 const {
   createLease,
@@ -21,7 +19,7 @@ const list = async (req, res) => {
 };
 
 const detail = async (req, res) => {
-  const instance = getWorkspaceLease(req.workspaceId, req.params.id)
+  const instance = getWorkspaceLease(req.workspaceId, req.params.id);
   res.status(200).send(instance);
 };
 
@@ -37,7 +35,7 @@ const update = async (req, res) => {
 };
 
 const remove = async (req, res) => {
-  await leaseValidators.deleteValidator(req.workspaceId, req.params.id)
+  await leaseValidators.deleteValidator(req.workspaceId, req.params.id);
   const instance = await deleteLease(req.params.id);
   res.status(200).send(instance);
 };
