@@ -58,7 +58,6 @@ Unit.hasMany(Lease, {
 
 // Contact
 Contact.belongsTo(Workspace)
-Contact.belongsTo(Workspace);
 
 // Lease
 Lease.belongsTo(Workspace)

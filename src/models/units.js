@@ -34,8 +34,8 @@ Unit.init(
 );
 
 Unit.prototype.isAvailableBetween = async function (
-  start = new Date(),
-  end = new Date()
+  start,
+  end
 ) {
   const activeLeases = await this.getLeases({
     scope: [
@@ -44,7 +44,7 @@ Unit.prototype.isAvailableBetween = async function (
       },
     ],
   });
-  return activeLeases;
+  return !activeLeases.length;
 };
 
 Unit.isNumUnique = async function (propertyId, num) {

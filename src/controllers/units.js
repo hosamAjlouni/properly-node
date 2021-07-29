@@ -19,7 +19,6 @@ const list = async (req, res) => {
 };
 
 const detail = async (req, res) => {
-  console.log('controller')
   const instance = await getWorkspaceUnit(req.workspaceId, req.params.id);
   res.status(200).send(instance);
 };

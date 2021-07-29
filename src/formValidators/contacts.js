@@ -18,15 +18,10 @@ const createValidator = async (workspaceId, body) => {
   if (!isFullNameUnique)
     errors.push(new FieldError("name", "Contact full name should be unique."));
 
-  // check phone uniqueness
-  objects = await listWorkspaceContacts(workspaceId, {
-    phone: body.phone,
-  });
-  if (objects.length)
-    errors.push({
-      param: "name",
-      msg: "Contact phone number should be unique.",
-    });
+  const isPhoneUnique = await Contact.isPhoneUnique(workspaceId, body.phone);
+
+  if (!isPhoneUnique)
+    errors.push(new FieldError("name", "A contact with this phone exists."));
 
   if (errors.length) throw new BadRequestError(errors);
 };
@@ -41,31 +36,22 @@ const updateValidator = async (workspaceId, contactId, body) => {
     oldInstance.middleName !== body.middleName ||
     oldInstance.lastName !== body.lastName
   ) {
-    // check full name uniqueness
-    let objects = await listWorkspaceContacts(workspaceId, {
-      [Op.and]: {
-        firstName: body.firstName,
-        middleName: body.middleName,
-        lastName: body.lastName,
-      },
-    });
-    if (objects.length)
-      errors.push({
-        param: "name",
-        msg: "Contact full name should be unique.",
-      });
+    const isFullNameUnique = await Contact.isFullNameUnique(
+      workspaceId,
+      body.firstName,
+      body.middleName,
+      body.lastName
+    );
+    if (!isFullNameUnique)
+      errors.push(
+        new FieldError("name", "Contact full name should be unique.")
+      );
   }
 
   if (oldInstance.phone !== body.phone) {
-    // check phone uniqueness
-    let objects = await listWorkspaceContacts(workspaceId, {
-      phone: body.phone,
-    });
-    if (objects.length)
-      errors.push({
-        param: "name",
-        msg: "Contact phone number should be unique.",
-      });
+    const isPhoneUnique = await Contact.isPhoneUnique(workspaceId, body.phone);
+    if (!isPhoneUnique)
+      errors.push(new FieldError("name", "A contact with this phone exists."));
   }
 
   if (errors.length) throw new BadRequestError(errors);

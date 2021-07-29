@@ -1,9 +1,9 @@
-const { Op } = require("sequelize");
+const { Op, DataTypes } = require("sequelize");
 const { BadRequestError } = require("./error-handler");
 
 const filterConstructor = (Model) => {
   const allowedAttr = Model.rawAttributes;
-  
+
   return (req, res, next) => {
     const queryString = req.query;
     const filter = {};

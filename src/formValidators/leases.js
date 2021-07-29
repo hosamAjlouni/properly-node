@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");
-const { BadRequestError } = require("../middleware/error-handler");
+const { BadRequestError, FieldError } = require("../middleware/error-handler");
+const Unit = require("../models/units");
 const {
   listWorkspaceLeases,
   getWorkspaceLease,
@@ -7,24 +8,14 @@ const {
 
 const createValidator = async (workspaceId, body) => {
   const errors = [];
-
-  // check full name uniqueness
-  let objects = await listWorkspaceLeases(workspaceId, {
-    [Op.and]: {
-      firstName: body.firstName,
-      middleName: body.middleName,
-      lastName: body.lastName,
-    },
-  });
-  if (objects.length)
-    errors.push({ param: "name", msg: "Lease full name should be unique." });
-
-  // check phone uniqueness
-  objects = await listWorkspaceLeases(workspaceId, {
-    phone: body.phone,
-  });
-  if (objects.length)
-    errors.push({ param: "name", msg: "Lease phone number should be unique." });
+  // check unit availability
+  const unit = await Unit.findByPk(body.unitId);
+  const isUnitAvailable = await unit.isAvailableBetween(body.start, body.end);
+  
+  if (!isUnitAvailable)
+    errors.push(
+      new FieldError("start", "A conflicting lease on the same unit exists.")
+    );
 
   if (errors.length) throw new BadRequestError(errors);
 };

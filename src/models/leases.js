@@ -13,14 +13,22 @@ Lease.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    status: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        if (this.end < new Date()) return "past";
+        else if (this.start > new Date()) return "future";
+        else return "active";
+      },
+    },
   },
   {
     sequelize,
     modelName: "lease",
     scopes: {
       past: { where: { end: { [Op.lt]: new Date() } } },
-      
-      activeBetween(reqStart, reqEnd) {
+
+      activeBetween(reqStart = new Date(), reqEnd = new Date()) {
         return {
           where: {
             [Op.or]: [
@@ -36,7 +44,7 @@ Lease.init(
           },
         };
       },
-      
+
       future: { where: { start: { [Op.gt]: new Date() } } },
     },
   }
