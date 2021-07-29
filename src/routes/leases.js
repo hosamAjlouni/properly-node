@@ -8,11 +8,12 @@ const {
   remove,
 } = require("../controllers/leases");
 const filterConstructor = require("../middleware/filterConstructor");
+const leaseValidator = require("../fieldsValidationMW/leases");
 
-router.post("/", create);
+router.post("/", ...leaseValidator, create);
 router.get("/", filterConstructor(Lease), list);
 router.get("/:id([0-9]+)/", detail);
-router.put("/:id([0-9]+)/", update);
+router.put("/:id([0-9]+)/", ...leaseValidator, update);
 router.delete("/:id([0-9]+)/", remove);
 
 module.exports = router;

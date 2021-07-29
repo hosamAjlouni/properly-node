@@ -9,7 +9,7 @@ const num = body("num")
   .isNumeric()
   .withMessage("should be a number")
   .isInt({ min: 0 })
-  .withMessage("should not be negative");
+  .withMessage("Should be a positive integer");
 
 const beds = body("beds")
   .exists()
@@ -19,7 +19,7 @@ const beds = body("beds")
   .isNumeric()
   .withMessage("should be a number")
   .isInt({ min: 0 })
-  .withMessage("should not be negative");
+  .withMessage("Should be a positive integer");
 
 const baths = body("baths")
   .exists()
@@ -29,7 +29,7 @@ const baths = body("baths")
   .isNumeric()
   .withMessage("should be a number")
   .isInt({ min: 0 })
-  .withMessage("should not be negative");
+  .withMessage("Should be a positive integer");
 
 const size = body("size")
   .exists()
@@ -39,7 +39,7 @@ const size = body("size")
   .isNumeric()
   .withMessage("should be a number")
   .isInt({ min: 0 })
-  .withMessage("should not be negative");
+  .withMessage("Should be a positive integer");
 
 const marketRent = body("marketRent")
   .exists()
@@ -49,7 +49,7 @@ const marketRent = body("marketRent")
   .isNumeric()
   .withMessage("should be a number")
   .isFloat({ min: 0 })
-  .withMessage("should not be negative");
+  .withMessage("Should be positive");
 
 const propertyId = body("propertyId")
   .exists()
@@ -58,8 +58,8 @@ const propertyId = body("propertyId")
   .withMessage("cannot be empty")
   .isNumeric()
   .withMessage("should be a number")
-  .isInt({ min: 1 })
-  .withMessage("should not be negative");
+  .isInt({ min: 0 })
+  .withMessage("Should be a positive integer");
 
 const unitValidator = [
   num,

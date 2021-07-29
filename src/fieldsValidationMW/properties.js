@@ -12,10 +12,8 @@ const name = body("name")
 const yearBuilt = body("yearBuilt")
   .exists()
   .withMessage("should exist")
-  .notEmpty()
-  .withMessage("cannot be empty")
   .isDate()
-  .withMessage("should be a valid date");
+  .withMessage("Should be a date (yyyy-mm-dd)");
 
 const description = body("description")
   .isString()
