@@ -1,9 +1,11 @@
+const Workspace = require("./workspaces");
 const User = require("./users");
 const Property = require("./properties");
 const Unit = require("./units");
 const Lease = require("./leases");
 const Contact = require("./contacts");
-const Workspace = require("./workspaces");
+const Invoice = require("./invoices");
+const Payment = require('./payments')
 
 // Workspace
 Workspace.hasMany(User, {
@@ -20,7 +22,7 @@ Workspace.hasMany(Property, {
 Workspace.hasMany(Unit, {
   foreignKey: {
     allowNull: false,
-    unique: "uniqueUnit"
+    unique: "uniqueUnit",
   },
 });
 Workspace.hasMany(Contact, {
@@ -34,6 +36,16 @@ Workspace.hasMany(Lease, {
     allowNull: false,
   },
 });
+Workspace.hasMany(Invoice, {
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Workspace.hasMany(Payment, {
+  foreignKey: {
+    allowNull: false
+  }
+})
 
 // User
 User.belongsTo(Workspace);
@@ -46,6 +58,16 @@ Property.hasMany(Unit, {
     allowNull: false,
   },
 });
+Property.hasMany(Invoice, {
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Property.hasMany(Payment, {
+  foreignKey: {
+    allowNull: false
+  }
+})
 
 // Unit
 Unit.belongsTo(Workspace);
@@ -55,10 +77,54 @@ Unit.hasMany(Lease, {
     allowNull: false,
   },
 });
+Unit.hasMany(Invoice, {
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Unit.hasMany(Payment, {
+  foreignKey: {
+    allowNull: false
+  }
+})
 
 // Contact
-Contact.belongsTo(Workspace)
+Contact.belongsTo(Workspace);
+Contact.hasMany(Invoice, {
+  foreignKey: {
+    allowNull: false,
+  },
+});
 
 // Lease
-Lease.belongsTo(Workspace)
-Lease.belongsTo(Unit)
+Lease.hasMany(Invoice, {
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Lease.hasMany(Payment, {
+  foreignKey: {
+    allowNull: false
+  }
+})
+Lease.belongsTo(Workspace);
+Lease.belongsTo(Unit);
+
+// Invoice
+Invoice.belongsTo(Lease);
+Invoice.belongsTo(Workspace);
+Invoice.belongsTo(Property);
+Invoice.belongsTo(Unit);
+Invoice.belongsTo(Contact);
+Invoice.hasMany(Payment, {
+  foreignKey: {
+    allowNull: false
+  }
+})
+
+// Payment
+Payment.belongsTo(Workspace)
+Payment.belongsTo(Property)
+Payment.belongsTo(Unit)
+Payment.belongsTo(Lease)
+Payment.belongsTo(Invoice)

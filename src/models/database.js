@@ -5,7 +5,7 @@ const sequelize = new Sequelize("db", "admin", "admin", {
   host: "./database/db.sqlite",
 });
 
-sequelize.sync({force: false}).then(() => {
+sequelize.sync({alter: false}).then(() => {
   console.log("Database is ready!");
 });
 
