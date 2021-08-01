@@ -5,7 +5,8 @@ const Unit = require("./units");
 const Lease = require("./leases");
 const Contact = require("./contacts");
 const Invoice = require("./invoices");
-const Payment = require('./payments')
+const Payment = require('./payments');
+const Permission = require("./permissions");
 
 // Workspace
 Workspace.hasMany(User, {
@@ -49,6 +50,7 @@ Workspace.hasMany(Payment, {
 
 // User
 User.belongsTo(Workspace);
+User.belongsToMany(Permission, {through: "user_permissions"})
 
 // Property
 Property.belongsTo(Workspace);
@@ -128,3 +130,6 @@ Payment.belongsTo(Property)
 Payment.belongsTo(Unit)
 Payment.belongsTo(Lease)
 Payment.belongsTo(Invoice)
+
+// Permissions
+Permission.belongsToMany(User, {through: 'user_permissions'})

@@ -1,16 +1,21 @@
+const Workspace = require("./workspaces");
 const User = require("./users");
 const Property = require("./properties");
 const Unit = require("./units");
 const Contact = require("./contacts");
 const Lease = require("./leases");
-const Workspace = require("./workspaces");
-require('./associations');
+const Invoice = require("./invoices");
+const Payment = require("./payments");
+const Permission = require("./permissions");
+require("./associations");
 
 module.exports = {
+  Workspace,
   User,
   Property,
   Unit,
   Lease,
   Contact,
-  Workspace
+  Invoice,
+  Payment,
 };

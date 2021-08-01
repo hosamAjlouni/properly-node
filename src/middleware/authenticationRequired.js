@@ -5,7 +5,7 @@ const { AuthorizationError, BadRequestError } = require("./error-handler");
 
 const authenticationRequired = async (req, res, next) => {
   const token = req.header("x-auth-token");
-  if (!token) throw new AuthorizationError("Unauthorized.");
+  if (!token) throw new AuthorizationError("Unauthenticated.");
 
   let decoded;
   try {

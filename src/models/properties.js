@@ -22,7 +22,6 @@ Property.init(
   {
     sequelize,
     modelName: "property",
-    defaultScope: {},
   }
 );
 
