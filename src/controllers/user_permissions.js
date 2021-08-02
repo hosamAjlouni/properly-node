@@ -5,8 +5,11 @@ const {
 } = require("../services/user_permissions");
 
 const list = async (req, res) => {
-  const objects = await listWorkspaceUserPermissions(req.workspaceId, req.params.userId);
-  res.status(200).send(objects);
+  const userPermissions = await listWorkspaceUserPermissions(
+    req.workspaceId,
+    req.params.userId
+  );
+  res.status(200).send(userPermissions);
 };
 
 const update = async (req, res) => {
@@ -15,12 +18,12 @@ const update = async (req, res) => {
   //   req.params.id,
   //   req.body
   // );
-  const instance = await setWorkspaceUserPermissions(
+  const userPermissions = await setWorkspaceUserPermissions(
     req.workspaceId,
     req.params.userId,
     req.body
   );
-  res.send(instance);
+  res.status(200).send(userPermissions);
 };
 
 module.exports = {

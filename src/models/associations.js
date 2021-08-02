@@ -5,7 +5,7 @@ const Unit = require("./units");
 const Lease = require("./leases");
 const Contact = require("./contacts");
 const Invoice = require("./invoices");
-const Payment = require('./payments');
+const Payment = require("./payments");
 const Permission = require("./permissions");
 
 // Workspace
@@ -44,13 +44,13 @@ Workspace.hasMany(Invoice, {
 });
 Workspace.hasMany(Payment, {
   foreignKey: {
-    allowNull: false
-  }
-})
+    allowNull: false,
+  },
+});
 
 // User
 User.belongsTo(Workspace);
-User.belongsToMany(Permission, {through: "user_permissions"})
+User.belongsToMany(Permission, { through: "user_permissions" });
 
 // Property
 Property.belongsTo(Workspace);
@@ -67,9 +67,9 @@ Property.hasMany(Invoice, {
 });
 Property.hasMany(Payment, {
   foreignKey: {
-    allowNull: false
-  }
-})
+    allowNull: false,
+  },
+});
 
 // Unit
 Unit.belongsTo(Workspace);
@@ -86,9 +86,9 @@ Unit.hasMany(Invoice, {
 });
 Unit.hasMany(Payment, {
   foreignKey: {
-    allowNull: false
-  }
-})
+    allowNull: false,
+  },
+});
 
 // Contact
 Contact.belongsTo(Workspace);
@@ -106,9 +106,9 @@ Lease.hasMany(Invoice, {
 });
 Lease.hasMany(Payment, {
   foreignKey: {
-    allowNull: false
-  }
-})
+    allowNull: false,
+  },
+});
 Lease.belongsTo(Workspace);
 Lease.belongsTo(Unit);
 
@@ -120,16 +120,19 @@ Invoice.belongsTo(Unit);
 Invoice.belongsTo(Contact);
 Invoice.hasMany(Payment, {
   foreignKey: {
-    allowNull: false
-  }
-})
+    allowNull: false,
+  },
+});
 
 // Payment
-Payment.belongsTo(Workspace)
-Payment.belongsTo(Property)
-Payment.belongsTo(Unit)
-Payment.belongsTo(Lease)
-Payment.belongsTo(Invoice)
+Payment.belongsTo(Workspace);
+Payment.belongsTo(Property);
+Payment.belongsTo(Unit);
+Payment.belongsTo(Lease);
+Payment.belongsTo(Invoice);
 
 // Permissions
-Permission.belongsToMany(User, {through: 'user_permissions'})
+Permission.belongsToMany(User, {
+  through: "user_permissions",
+  joinTableAttributes: [],
+});

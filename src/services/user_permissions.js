@@ -17,7 +17,7 @@ const setWorkspaceUserPermissions = async (workspaceId, userId, body) => {
 
   if (!user) throw new BadRequestError("User not found.");
   await user.setPermissions(body.permissions);
-  return await user.getPermissions();
+  return await user.getPermissions({joinTableAttributes: []});
 };
 
 module.exports = {
