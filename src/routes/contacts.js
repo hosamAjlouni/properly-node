@@ -12,6 +12,21 @@ const {
 
 router.post("/", ...contactValidator, create);
 router.get("/", filterConstructor(Contact), list);
+router.get('/schema', async (req, res) => {
+  const contactsSchema = {
+
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        }
+      }
+    }
+  }
+  res.status(200).send(contactsSchema);
+})
 router.get("/:id([0-9]+)/", detail);
 router.put("/:id([0-9]+)/", ...contactValidator, update);
 router.delete("/:id([0-9]+)/", remove);

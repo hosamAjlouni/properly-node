@@ -14,13 +14,16 @@ const user_permissions = require("./user_permissions");
 
 router.use("/users", users);
 router.use("/workspaces", workspaces);
-router.use("/properties", authenticationRequired, properties);
-router.use("/units", authenticationRequired, units);
-router.use("/leases", authenticationRequired, leases);
-router.use("/contacts", authenticationRequired, contacts);
-router.use("/invoices", authenticationRequired, invoices);
-router.use("/payments", authenticationRequired, payments);
-router.use("/permissions", authenticationRequired, permissions);
-router.use("/user_permissions", authenticationRequired, user_permissions);
+
+router.use(authenticationRequired);
+
+router.use("/properties", properties);
+router.use("/units", units);
+router.use("/leases", leases);
+router.use("/contacts", contacts);
+router.use("/invoices", invoices);
+router.use("/payments", payments);
+router.use("/permissions", permissions);
+router.use("/user_permissions", user_permissions);
 
 module.exports = router;

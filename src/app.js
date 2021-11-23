@@ -14,7 +14,7 @@ const { User } = require("./models");
 if (!config.get("jwtPrivateKey")) {
   throw new Error("FATAL Error: jwtPrivateKey is not defined");
 }
-const port = 8000;
+const port = 3000;
 
 const app = express();
 
